@@ -1,102 +1,41 @@
 package handler
 
 import (
-	"strconv"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
-type Book struct {
-	ID     int    `json:"id"`
-	Title  string `json:"title"`
-	Author string `json:"author"`
+// Handler is the main entry point of the application. Think of it like the main() method
+func Handler(w http.ResponseWriter, r *http.Request) {
+	// This is needed to set the proper request path in `*fiber.Ctx`
+	r.RequestURI = r.URL.String()
+
+	handler().ServeHTTP(w, r)
 }
 
-var books []Book
+func handler() http.HandlerFunc {
+	app := fiber.New()
 
-func handler() {
-
-	isProd := false
-
-	app := fiber.New(fiber.Config{
-		Prefork:       isProd,
-		CaseSensitive: true,
-		StrictRouting: true,
-		ServerHeader:  "Fiber",
-		AppName:       "Go LLM Chat App v0.0.4",
+	app.Get("/v1", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"version": "v1",
+		})
 	})
 
-	app.Static("/", "./public")
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString(("hello world"))
+	app.Get("/v2", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"version": "v2",
+		})
 	})
 
-	api := app.Group("/api")
-	v1 := api.Group("/v1")
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"uri":  ctx.Request().URI().String(),
+			"path": ctx.Path(),
+		})
+	})
 
-	v1.Get("/books", getBooks)
-	v1.Get("/books/:id", getBook)
-	v1.Post("/books", createBook)
-	v1.Put("/books/:id", updateBook)
-
-	app.Listen(":8000")
-
-	books = append(books, Book{ID: 1, Title: "HTML 101", Author: "Pichead"})
-	books = append(books, Book{ID: 2, Title: "CSS 101", Author: "Maneerat"})
-
-}
-
-func getBooks(c *fiber.Ctx) error {
-	return c.JSON(books)
-}
-
-func getBook(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
-
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
-	for _, book := range books {
-		if book.ID == id {
-			return c.JSON(book)
-		}
-	}
-
-	return c.SendStatus(fiber.StatusNotFound)
-}
-
-func createBook(c *fiber.Ctx) error {
-	book := new(Book)
-
-	if err := c.BodyParser(book); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
-
-	books = append(books, *book)
-	return c.JSON(c.Request().Body())
-}
-
-func updateBook(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
-
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
-
-	bookUpdate := new(Book)
-
-	if err := c.BodyParser(bookUpdate); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
-
-	for i, book := range books {
-		if book.ID == id {
-			books[i].Author = bookUpdate.Author
-			books[i].Title = bookUpdate.Title
-			return c.JSON(books[i])
-		}
-	}
-
-	return c.SendStatus(fiber.StatusNotFound)
+	return adaptor.FiberApp(app)
 }
