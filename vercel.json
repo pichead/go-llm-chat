@@ -1,13 +1,5 @@
 {
-  "build": {
-    "env": {
-      "GO_BUILD_FLAGS": "-ldflags '-s -w'"
-    }
-  },
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/cmd/server/main.go"
-    }
+    { "source": "(.*)", "destination": "api/index.go" }
   ]
 }
