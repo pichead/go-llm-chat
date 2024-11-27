@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"strconv"
@@ -14,7 +14,7 @@ type Book struct {
 
 var books []Book
 
-func main() {
+func handler() {
 
 	isProd := false
 
