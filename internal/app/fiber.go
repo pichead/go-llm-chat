@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"strconv"
@@ -14,8 +14,7 @@ type Book struct {
 
 var books []Book
 
-func main() {
-
+func FiberApp() *fiber.App {
 	isProd := false
 
 	app := fiber.New(fiber.Config{
@@ -40,10 +39,9 @@ func main() {
 	v1.Post("/books", createBook)
 	v1.Put("/books/:id", updateBook)
 
-	app.Listen(":8000")
-
 	books = append(books, Book{ID: 1, Title: "HTML 101", Author: "Pichead"})
 	books = append(books, Book{ID: 2, Title: "CSS 101", Author: "Maneerat"})
+	return app
 
 }
 
