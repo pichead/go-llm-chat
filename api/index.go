@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
-	"github.com/pichead/go-llm-chat/pkg/app"
+	"github.com/pichead/go-llm-chat/internal/app"
 )
 
 // Handler is the main entry point of the application. Think of it like the main() method
