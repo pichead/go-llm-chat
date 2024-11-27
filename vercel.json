@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "(.*)", "destination": "internal/vercel/index.go" }
+    { "source": "(.*)", "destination": "internal/vercel/api/index.go" }
   ]
 }
