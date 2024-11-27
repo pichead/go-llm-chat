@@ -1,0 +1,8 @@
+{
+    "builds": [
+      {
+        "src": "cmd/server/main.go",
+        "use": "@vercel/go"
+      }
+    ]
+  }
