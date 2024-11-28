@@ -23,11 +23,11 @@ func main() {
 
 	// 5. สร้าง Binary (optional)
 	fmt.Println("Building the project...")
-	runCommand("go", "build", "-o", "server", "./cmd/server")
+	runCommand("go", "build", "-o", "app", "./cmd/app")
 
 	fmt.Println("Setup completed! Use the following commands:")
-	fmt.Println("- Run with nodemon: nodemon")
-	fmt.Println("- Run binary: ./server")
+	fmt.Println("- Run with nodemon: go run ./cmd/dev")
+	fmt.Println("- Run binary: ./app")
 }
 
 func checkGoInstalled() {
@@ -53,7 +53,7 @@ func createNodemonConfig() {
 	config := `{
   "watch": ["**/*.go"],
   "ext": "go",
-  "exec": "go run ./cmd/server/main.go"
+  "exec": "go run ./cmd/app/main.go"
 }`
 	if _, err := os.Stat("nodemon.json"); os.IsNotExist(err) {
 		fmt.Println("Creating nodemon.json...")

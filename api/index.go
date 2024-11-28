@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
-	"github.com/pichead/go-llm-chat/pkg/app"
+	server "github.com/pichead/go-llm-chat/fiber"
 )
 
 // Handler is the main entry point of the application. Think of it like the main() method
@@ -16,7 +16,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handler() http.HandlerFunc {
-	app := app.FiberApp()
+	app := server.FiberApp()
 
 	return adaptor.FiberApp(app)
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	cmd := exec.Command("nodemon", "--exec", "go", "run", "./cmd/server", "--signal", "SIGTERM")
+	cmd := exec.Command("nodemon", "--exec", "go", "run", "./cmd/app", "--signal", "SIGTERM")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
